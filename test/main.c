@@ -1,4 +1,5 @@
 #define CTEST_MAIN
+#define CTEST_SEGFAULT
 #include </home/vova/trpoo/geometry-KarpukVladimir/src/libgeometry/functions.h>
 #include <ctest.h>
 
