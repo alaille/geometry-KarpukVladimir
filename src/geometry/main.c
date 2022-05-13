@@ -1,6 +1,6 @@
+#include <libgeometry/functions.h>
 #include <stdio.h>
 #include <string.h>
-#include <libgeometry/functions.h>
 
 int main()
 {
@@ -14,8 +14,8 @@ int main()
         str[strlen(str) - 1] = '\0';
 
         if (isCorrect(str)) {
-            circle tr1; 
-            tr1= getcircle(str);
+            circle tr1;
+            tr1 = getcircle(str);
             writePandS(tr1);
         }
         printf("\n");
@@ -23,4 +23,4 @@ int main()
 
     fclose(file);
     return 0;
-} 
+}
