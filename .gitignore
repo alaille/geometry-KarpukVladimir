@@ -3,4 +3,5 @@
 *.d
 *.a
 *.exe
+bin/*
 main
