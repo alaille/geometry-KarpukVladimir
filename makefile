@@ -15,10 +15,10 @@ $(TARGET) : ./obj/src/geometry/main.o ./obj/src/libgeometry/*.a
 ./obj/src/libgeometry/*.a : ./obj/src/libgeometry/*.o ./obj/test/libtest/*.o
 	ar rcs $@ $^
 
-./obj/src/libgeometry/*.o : ./src/libgeometry/geometry.c
+./obj/src/libgeometry/*.o : ./src/libgeometry/functions.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
-./obj/test/libtest/*.o : ./test/geometry_test.c
+./obj/test/libtest/*.o : ./test/test.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
 $(TARGET1) : ./obj/src/libgeometry/*.a ./obj/test/libtest/*.o ./obj/test/test/main.o ./obj/src/libgeometry/*.o
