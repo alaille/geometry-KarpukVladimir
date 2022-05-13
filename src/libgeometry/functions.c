@@ -1,11 +1,5 @@
 #include "functions.h"
 
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 int check_line()
 {
     FILE* file = fopen("input.txt", "r");
@@ -118,4 +112,17 @@ void writePandS(circle tr1)
     printf("circle:\n");
     printf("P: %f\n", 2 * M_PI * tr1.r);
     printf("S: %f\n", M_PI * tr1.r * tr1.r);
+}
+
+void PrintIntersect(circle* circles, int circles_count)
+{
+    printf("\nFound %d circles\n", circles_count);
+    if (circles_count >= 1) {
+        for (int i = 0; i < circles_count - 1; i++)
+            for (int j = i + 1; j < circles_count; j++)
+                if (sqrt(pow(circles[i].x - circles[j].x, 2)
+                         + pow(circles[i].y - circles[j].y, 2))
+                    <= (circles[i].r + circles[j].r))
+                    printf("Circle%d and Circle%d intersect\n", i + 1, j + 1);
+    }
 }

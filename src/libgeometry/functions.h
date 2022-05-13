@@ -1,3 +1,8 @@
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #pragma once
 #ifndef _FUNCTIONS_H_
 #define _FUNCTIONS_H_
