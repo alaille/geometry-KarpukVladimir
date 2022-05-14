@@ -1,5 +1,5 @@
-#include </home/vova/trpoo/geometry-KarpukVladimir/src/libgeometry/functions.h>
-#include </home/vova/trpoo/geometry-KarpukVladimir/thirdparty/ctest.h>
+#include <ctest.h>
+#include <libgeometry/functions.h>
 
 CTEST(getcircle, test1)
 {
@@ -18,6 +18,3 @@ CTEST(isCorrect, test1)
     int rez = isCorrect("cercle(1.0 2.0, 3)");
     ASSERT_EQUAL(rez, 0);
 }
-
-
-
