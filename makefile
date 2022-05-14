@@ -1,39 +1,61 @@
-TARGET = bin/geometry
-TARGET1 = bin/test
-CC = gcc
-CFLAGS = -I src/ -I thirdparty/ -Wall -Wextra -Werror -O0 -g
-CPPFLAGS = -MMD
-.PHONY : clean
-.PHONY : test
+APP_NAME = geometry
+LIB_NAME = libgeometry
+TEST_NAME = geometry-test
 
-$(TARGET) : ./obj/src/geometry/main.o ./obj/src/libgeometry/*.a 
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+CFLAGS = -Wall -Werror
+CPPFLAGS = -I src -MP -MMD
+LBOFLAGS = -lm
 
-./obj/src/geometry/main.o : ./src/geometry/main.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+OBJ_DIR = obj
+SRC_DIR = src
+TEST_DIR = test
 
-./obj/src/libgeometry/*.a : ./obj/src/libgeometry/*.o ./obj/test/libtest/*.o
+TEST_PATH = $(TEST_NAME)
+APP_PATH = $(APP_NAME)
+LIB_PATH = $(OBJ_DIR)/$(SRC_DIR)/$(LIB_NAME)/$(LIB_NAME).a
+
+SRC_EXT = c
+
+APP_SOURCES = $(shell find $(SRC_DIR)/$(APP_NAME) -name '*.$(SRC_EXT)')
+APP_OBJECTS = $(APP_SOURCES:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.o)
+
+LIB_SOURCES = $(shell find $(SRC_DIR)/$(LIB_NAME) -name '*.$(SRC_EXT)')
+LIB_OBJECTS = $(LIB_SOURCES:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.o)
+
+TEST_SOURCES = $(shell find $(TEST_DIR)/ -name '*.$(SRC_EXT)')
+TEST_OBJECTS = $(TEST_SOURCES:$(TEST_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(TEST_DIR)/%.o)
+
+DEPS = $(APP_OBJECTS:.o=.d) $(LIB_OBJECTS:.o=.d) $(TEST_OBJECTS:.o=.d) 
+
+.PHONY: all lib test
+all: $(APP_PATH)
+
+-include $(DEPS)
+
+$(APP_PATH): $(APP_OBJECTS) $(LIB_PATH)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@ $(LBOFLAGS)
+
+$(LIB_PATH): $(LIB_OBJECTS) 
 	ar rcs $@ $^
 
-./obj/src/libgeometry/*.o : ./src/libgeometry/functions.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+$(OBJ_DIR)/$(SRC_DIR)/$(APP_NAME)/%.o: $(SRC_DIR)/$(APP_NAME)/%.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
-./obj/test/libtest/*.o : ./test/test.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+$(OBJ_DIR)/$(SRC_DIR)/$(LIB_NAME)/%.o: $(SRC_DIR)/$(LIB_NAME)/%.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@ 
 
-$(TARGET1) : ./obj/src/libgeometry/*.a ./obj/test/libtest/*.o ./obj/test/test/main.o ./obj/src/libgeometry/*.o
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+lib: $(LIB_PATH)
 
-./obj/test/test/main.o : ./test/main.c
-	$(CC) -c $(CFLAGS) -o $@ $^
+test: $(TEST_SOURCES) $(TEST_PATH) 
 
-test : $(TARGET1)
-	$(TARGET1)
+$(TEST_PATH): $(TEST_OBJECTS) $(LIB_OBJECTS)
+	$(CC) -I thirdparty/ $(CPPFLAGS) $(TEST_OBJECTS) $(LIB_OBJECTS) -o $@ $(LBOFLAGS)
 
-run :
-	$(TARGET)
+$(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c $(LIB_PATH)
+	$(CC) -c $(CFLAGS) -I thirdparty/ $(CPPFLAGS) $< -o $@ $(LBOFLAGS)
 
-clean : 
-	rm ./obj/src/geometry/*.o ./obj/src/libgeometry/*.a ./obj/src/libgeometry/*.o $(TARGET) ./obj/test/libtest/*.o $(TARGET1) ./obj/src/geometry/main.d ./obj/src/libgeometry/*.d ./obj/test/libtest/*.d ./obj/test/test/*.d ./obj/test/test/*.o
-
--include ./obj/src/geometry/main.d ./obj/src/libgeometry/*.d ./obj/test/libtest/*.d ./obj/test/libtest/*.d
+.PHONY: clean
+clean:
+	$(RM) $(APP_PATH) $(LIB_PATH) $(TEST_PATH)
+	find $(OBJ_DIR) -name '*.o' -exec $(RM) '{}' \;
+	find $(OBJ_DIR) -name '*.d' -exec $(RM) '{}' \;
