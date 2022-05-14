@@ -1,10 +1,23 @@
-*.out
-*.o
+# Prerequisites
 *.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.lib
 *.a
+*.la
+*.lo
+
+# Executables
 *.exe
-bin/*
-main
-obj/test/
-test/
-thirdparty/ 
+*.out
+*.app
+
+chessviz
+libchessviz
+libchessviz-test
