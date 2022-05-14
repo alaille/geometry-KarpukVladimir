@@ -1,4 +1,6 @@
 #include <libgeometry/functions.h>
+#include <stdio.h>
+#include <string.h>
 
 int main()
 {
@@ -22,7 +24,7 @@ int main()
 
     fclose(file);
 
-        for (int i = 0; i < circles_count; i++)
+    for (int i = 0; i < circles_count; i++)
         writePandS(circles[i]);
 
     PrintIntersect(circles, circles_count);
