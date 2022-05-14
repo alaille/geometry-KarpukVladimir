@@ -1,4 +1,9 @@
-#include "functions.h"
+#include <ctype.h>
+#include <libgeometry/functions.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int check_line()
 {
